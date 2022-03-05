@@ -1,12 +1,18 @@
 ﻿using System;
+using System.Collections;
 
 namespace CustomList.Lib
 {
-    public class CustomList<T> : IDisposable
+    public class CustomList<T> : IDisposable, IEnumerable
     {
         private int count = 0;
         private Node<T> root = null;
 
+        //private readonly CustomListEnumerator<T> enumerator;
+        //public CustomList()
+        //{
+        //    enumerator = new CustomListEnumerator<T>(this);
+        //}
 
         public int Count { get { return count; } }
         public void Add(T value)
@@ -56,6 +62,11 @@ namespace CustomList.Lib
             GC.Collect();
         }
 
+        public IEnumerator GetEnumerator()
+        {
+            return new CustomListEnumerator<T>(this);
+        }
+
         public T this[int i]
         {
             get
@@ -78,24 +89,5 @@ namespace CustomList.Lib
                 }
             }
         }
-    }
-
-    public class Node<T>
-    {
-        public readonly int Index;
-        public T Value { get; set; }
-        public Node<T> Child { get; set; } = null;
-
-        public Node(int index, T value)
-        {
-            this.Index = index;
-            this.Value = value;
-        }
-
-        public override string ToString()
-        {
-            return $"Index: {Index}, Value: '{Value}'";
-        }
-
     }
 }
